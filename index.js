@@ -29,11 +29,17 @@ app.use(cors({
   }
 }));
 
+
+
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 // respond with "hello world" when a GET request is made to the homepage
 app.get("/", (req, res) => {
   res.send("hello world");
+});
+
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to', mongoose.connection.db.databaseName);
 });
 app.post(
   "/users",
@@ -49,6 +55,7 @@ app.post(
   (req, res) => {
     // check the validation object for errors
     let errors = validationResult(req);
+    console.log('Using collection:', Users.collection.name);
 
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });

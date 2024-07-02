@@ -7,7 +7,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const { Users, List, Card } = require("./model");
 const passport = require("passport");
-const usersRouter = require('./routes/users'); // Import the users routes
+const usersRouter = require("./routes/users"); // Import the users routes
 const uuid = require("uuid");
 
 // app.use(cors());
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const auth = require("./auth")(app);
 require("./passport");
 
-app.use(morgan('common'));
+app.use(morgan("common"));
 
 let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
@@ -36,8 +36,7 @@ app.use(
   })
 );
 
-app.use('/api/users', usersRouter);
-
+app.use("/api/users", usersRouter);
 
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -96,7 +95,6 @@ app.get("/", (req, res) => {
 //       });
 //   }
 // );
-
 
 // app.get(
 //   "/users",
@@ -357,6 +355,12 @@ app.delete(
       });
   }
 );
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Connected to MongoDB Atlas");
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {

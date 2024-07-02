@@ -1,7 +1,7 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const passport = require('passport');
-const Users = require('../models/User'); // Adjust the path as necessary
+const { Users } = require("../model");
 
 const router = express.Router();
 

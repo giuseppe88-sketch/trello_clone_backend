@@ -7,7 +7,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const { Users, List, Card } = require("./model");
 const passport = require("passport");
-const { check, validationResult } = require("express-validator");
+const usersRouter = require('./routes/users'); // Import the users routes
 const uuid = require("uuid");
 
 // app.use(cors());
@@ -36,6 +36,9 @@ app.use(
   })
 );
 
+app.use('/api/users', usersRouter);
+
+
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(process.env.CONNECTION_URI, {
@@ -47,83 +50,83 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-app.post(
-  "/users",
-  [
-    check("username", "username is required").isLength({ min: 5 }),
-    check(
-      "username",
-      "username contains non alphanumeric characters - not allowed."
-    ).isAlphanumeric(),
-    check("password", "password is required").not().isEmpty(),
-    check("email", "email does not appear to be valid").isEmail(),
-  ],
-  (req, res) => {
-    // check the validation object for errors
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
-    let hashedPassword = Users.hashPassword(req.body.password);
-    Users.findOne({ username: req.body.username })
-      .then((user) => {
-        if (user) {
-          return res
-            .status(400)
-            .send(req.body.username + " " + "already exists");
-        } else {
-          Users.create({
-            username: req.body.username,
-            password: hashedPassword,
-            email: req.body.email,
-            birthday: req.body.birthday,
-          })
-            .then((user) => {
-              res.status(201).json(user);
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).send("Error: " + error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
-  }
-);
+// app.post(
+//   "/users",
+//   [
+//     check("username", "username is required").isLength({ min: 5 }),
+//     check(
+//       "username",
+//       "username contains non alphanumeric characters - not allowed."
+//     ).isAlphanumeric(),
+//     check("password", "password is required").not().isEmpty(),
+//     check("email", "email does not appear to be valid").isEmail(),
+//   ],
+//   (req, res) => {
+//     // check the validation object for errors
+//     let errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       return res.status(422).json({ errors: errors.array() });
+//     }
+//     let hashedPassword = Users.hashPassword(req.body.password);
+//     Users.findOne({ username: req.body.username })
+//       .then((user) => {
+//         if (user) {
+//           return res
+//             .status(400)
+//             .send(req.body.username + " " + "already exists");
+//         } else {
+//           Users.create({
+//             username: req.body.username,
+//             password: hashedPassword,
+//             email: req.body.email,
+//             birthday: req.body.birthday,
+//           })
+//             .then((user) => {
+//               res.status(201).json(user);
+//             })
+//             .catch((error) => {
+//               console.error(error);
+//               res.status(500).send("Error: " + error);
+//             });
+//         }
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//         res.status(500).send("Error: " + error);
+//       });
+//   }
+// );
 
 
-app.get(
-  "/users",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.find()
-      .then((user) => {
-        res.status(200).json(user);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error:" + err);
-      });
-  }
-);
+// app.get(
+//   "/users",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     Users.find()
+//       .then((user) => {
+//         res.status(200).json(user);
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send("Error:" + err);
+//       });
+//   }
+// );
 
-app.get(
-  "/users/:username",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOne({ username: req.params.username })
-      .then((user) => {
-        res.json(user);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error: " + err);
-      });
-  }
-);
+// app.get(
+//   "/users/:username",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     Users.findOne({ username: req.params.username })
+//       .then((user) => {
+//         res.json(user);
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send("Error: " + err);
+//       });
+//   }
+// );
 
 app.get(
   "/api/list",

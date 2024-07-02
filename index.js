@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const morgan = require('morgan');
+const morgan = require("morgan");
 
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { Users, List, Card } = require("./model");
 const passport = require("passport");
-const { check, validationResult } = require('express-validator');
-const uuid = require('uuid');
+const { check, validationResult } = require("express-validator");
+const uuid = require("uuid");
 
 // app.use(cors());
 app.use(bodyParser.json());
@@ -16,23 +16,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const auth = require("./auth")(app);
 require("./passport");
 
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));
-
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        // If a specific origin isn’t found on the list of allowed origins
+        let message =
+          "The CORS policy for this application doesn’t allow access from origin " +
+          origin;
+        return callback(new Error(message), false);
+      }
+      return callback(null, true);
+    },
+  })
+);
 
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 // respond with "hello world" when a GET request is made to the homepage
 app.get("/", (req, res) => {
   res.send("hello world");
@@ -84,34 +91,11 @@ app.post(
       });
   }
 );
-// app.post("/users", async (req, res) => {
-//   await Users.findOne({ username: req.body.username })
-//     .then((user) => {
-//       if (user) {
-//         return res.status(400).send(req.body.username + "already exists");
-//       } else {
-//         Users.create({
-//           username: req.body.username,
-//           password: req.body.password,
-//           email: req.body.email,
-//         })
-//           .then((user) => {
-//             res.status(201).json(user);
-//           })
-//           .catch((error) => {
-//             console.error(error);
-//             res.status(500).send("Error: " + error);
-//           });
-//       }
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//       res.status(500).send("Error: " + error);
-//     });
-// });
+
 
 app.get(
   "/users",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.find()
       .then((user) => {

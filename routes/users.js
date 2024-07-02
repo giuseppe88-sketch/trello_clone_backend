@@ -86,7 +86,7 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Users.findOneAndDelete({ _id: req.params.id })
+    Users.findOneByIdAndDelete(req.params.id)
       .then((user) => {
         console.log("user successfully deleted");
         res.json(user);

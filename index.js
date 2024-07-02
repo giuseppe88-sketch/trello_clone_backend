@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const auth = require("./auth")(app);
 require("./passport");
 
+app.use(morgan('common'));
+
 let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
 
 app.use(

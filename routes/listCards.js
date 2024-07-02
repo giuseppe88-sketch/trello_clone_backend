@@ -7,7 +7,7 @@ const { Card } = require("../model");
 
 
 router.post(
-    "/card",
+    "/:listId/card",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
       const newCard = new Card({
@@ -43,7 +43,7 @@ router.post(
 
 
   router.delete(
-    "/card/:cardId",
+    "/:listId/card/:cardId",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
       List.findById(req.params.listId)

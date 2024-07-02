@@ -42,7 +42,7 @@ app.use(
 app.use("/api/users", usersRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/cards", cardsRouter);
-app.use("/api/lists/:listId", listsCardsRouter);
+app.use("/api/listsCards", listsCardsRouter);
 
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });

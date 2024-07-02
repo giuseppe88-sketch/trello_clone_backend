@@ -29,11 +29,8 @@ app.use(cors({
   }
 }));
 
-// mongoose.connect('mongodb://localhost:27017/users', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect("mongodb://localhost:27017/trelloDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 // respond with "hello world" when a GET request is made to the homepage
 app.get("/", (req, res) => {
   res.send("hello world");

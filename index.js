@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const { Users, List, Card } = require("./model");
 const usersRouter = require("./routes/users"); // Import the users routes
 const listsRouter = require("./routes/list"); // Import the lists routes
+const listsCardsRouter = require("./routes/listCards"); // Import the lists routes
 const cardsRouter = require("./routes/cards"); // Import the lists routes
 
 const uuid = require("uuid");
@@ -41,7 +42,7 @@ app.use(
 app.use("/api/users", usersRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/cards", cardsRouter);
-app.use("/api/lists/:listId", cardsRouter);
+app.use("/api/lists/:listId", listsCardsRouter);
 
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });

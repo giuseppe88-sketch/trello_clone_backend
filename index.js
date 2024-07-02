@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const { Users, List, Card } = require("./model");
 const passport = require("passport");
 const usersRouter = require("./routes/users"); // Import the users routes
+const listsRouter = require('./routes/list'); // Import the lists routes
+
 const uuid = require("uuid");
 
 // app.use(cors());
@@ -37,6 +39,7 @@ app.use(
 );
 
 app.use("/api/users", usersRouter);
+app.use('/api/lists', listsRouter);
 
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -49,60 +52,14 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-// app.post(
-//   "/users",
-//   [
-//     check("username", "username is required").isLength({ min: 5 }),
-//     check(
-//       "username",
-//       "username contains non alphanumeric characters - not allowed."
-//     ).isAlphanumeric(),
-//     check("password", "password is required").not().isEmpty(),
-//     check("email", "email does not appear to be valid").isEmail(),
-//   ],
-//   (req, res) => {
-//     // check the validation object for errors
-//     let errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(422).json({ errors: errors.array() });
-//     }
-//     let hashedPassword = Users.hashPassword(req.body.password);
-//     Users.findOne({ username: req.body.username })
-//       .then((user) => {
-//         if (user) {
-//           return res
-//             .status(400)
-//             .send(req.body.username + " " + "already exists");
-//         } else {
-//           Users.create({
-//             username: req.body.username,
-//             password: hashedPassword,
-//             email: req.body.email,
-//             birthday: req.body.birthday,
-//           })
-//             .then((user) => {
-//               res.status(201).json(user);
-//             })
-//             .catch((error) => {
-//               console.error(error);
-//               res.status(500).send("Error: " + error);
-//             });
-//         }
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//         res.status(500).send("Error: " + error);
-//       });
-//   }
-// );
 
 // app.get(
-//   "/users",
+//   "/api/list",
 //   passport.authenticate("jwt", { session: false }),
 //   (req, res) => {
-//     Users.find()
-//       .then((user) => {
-//         res.status(200).json(user);
+//     List.find()
+//       .then((list) => {
+//         res.status(200).json(list);
 //       })
 //       .catch((err) => {
 //         console.error(err);
@@ -112,49 +69,19 @@ app.get("/", (req, res) => {
 // );
 
 // app.get(
-//   "/users/:username",
+//   "/api/list/:ID",
 //   passport.authenticate("jwt", { session: false }),
 //   (req, res) => {
-//     Users.findOne({ username: req.params.username })
-//       .then((user) => {
-//         res.json(user);
+//     List.findOne({ _id: req.params.ID })
+//       .then((listId) => {
+//         res.status(200).json(listId);
 //       })
 //       .catch((err) => {
 //         console.error(err);
-//         res.status(500).send("Error: " + err);
+//         res.status(500).send("Error:" + err);
 //       });
 //   }
 // );
-
-app.get(
-  "/api/list",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    List.find()
-      .then((list) => {
-        res.status(200).json(list);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error:" + err);
-      });
-  }
-);
-
-app.get(
-  "/api/list/:ID",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    List.findOne({ _id: req.params.ID })
-      .then((listId) => {
-        res.status(200).json(listId);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error:" + err);
-      });
-  }
-);
 app.get(
   "/api/card/",
   passport.authenticate("jwt", { session: false }),
@@ -187,62 +114,62 @@ app.get(
 
 // POST/PUT ENDPOINT
 
-app.post(
-  "/api/list",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    List.find().then((list) => {
-      const request = req.body.title;
-      const existingList = list.find((item) => item.title === request);
+// router.post(
+//   "/",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     List.find().then((list) => {
+//       const request = req.body.title;
+//       const existingList = list.find((item) => item.title === request);
 
-      if (existingList) {
-        return res.status(400).json({
-          message: "There is already a list created with the title " + request,
-        });
-      }
-      const newList = new List({
-        title: req.body.title,
-        cards: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-      newList
-        .save()
-        .then((list) => {
-          res.status(201).json(list);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        });
-    });
-  }
-);
+//       if (existingList) {
+//         return res.status(400).json({
+//           message: "There is already a list created with the title " + request,
+//         });
+//       }
+//       const newList = new List({
+//         title: req.body.title,
+//         cards: [],
+//         createdAt: new Date(),
+//         updatedAt: new Date(),
+//       });
+//       newList
+//         .save()
+//         .then((list) => {
+//           res.status(201).json(list);
+//         })
+//         .catch((err) => {
+//           console.error(err);
+//           res.status(500).send("Error: " + err);
+//         });
+//     });
+//   }
+// );
 
-app.put(
-  "/api/list/:ID",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    List.findByIdAndUpdate(
-      req.params.ID,
-      {
-        title: req.body.title,
-        updatedAt: new Date(),
-      },
-      { new: true }
-    )
-      .then((list) => {
-        if (!list) {
-          return res.status(404).send("List not found");
-        }
-        res.status(200).json(list);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error: " + err);
-      });
-  }
-);
+// router.put(
+//   "/:ID",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     List.findByIdAndUpdate(
+//       req.params.ID,
+//       {
+//         title: req.body.title,
+//         updatedAt: new Date(),
+//       },
+//       { new: true }
+//     )
+//       .then((list) => {
+//         if (!list) {
+//           return res.status(404).send("List not found");
+//         }
+//         res.status(200).json(list);
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send("Error: " + err);
+//       });
+//   }
+// );
 
 app.post(
   "/api/list/:listId/card",
@@ -307,25 +234,25 @@ app.put(
 );
 
 // DELETE
-app.delete(
-  "/api/list/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    List.findByIdAndDelete(req.params.id)
-      .then((deletedList) => {
-        if (!deletedList) {
-          return res.status(404).send("List not found");
-        }
-        res
-          .status(200)
-          .json({ message: "List deleted successfully", deletedList });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error: " + err);
-      });
-  }
-);
+// app.delete(
+//   "/api/list/:id",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     List.findByIdAndDelete(req.params.id)
+//       .then((deletedList) => {
+//         if (!deletedList) {
+//           return res.status(404).send("List not found");
+//         }
+//         res
+//           .status(200)
+//           .json({ message: "List deleted successfully", deletedList });
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send("Error: " + err);
+//       });
+//   }
+// );
 
 app.delete(
   "/api/list/:listId/card/:cardId",

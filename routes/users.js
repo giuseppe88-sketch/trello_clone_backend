@@ -1,18 +1,21 @@
-const express = require('express');
-const { check, validationResult } = require('express-validator');
-const passport = require('passport');
+const express = require("express");
+const { check, validationResult } = require("express-validator");
+const passport = require("passport");
 const { Users } = require("../model");
 
 const router = express.Router();
 
 // Create a new user
 router.post(
-  '/',
+  "/",
   [
-    check('username', 'username is required').isLength({ min: 5 }),
-    check('username', 'username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('password', 'password is required').not().isEmpty(),
-    check('email', 'email does not appear to be valid').isEmail(),
+    check("username", "username is required").isLength({ min: 5 }),
+    check(
+      "username",
+      "username contains non-alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("password", "password is required").not().isEmpty(),
+    check("email", "email does not appear to be valid").isEmail(),
   ],
   (req, res) => {
     // Check the validation object for errors
@@ -24,7 +27,7 @@ router.post(
     Users.findOne({ username: req.body.username })
       .then((user) => {
         if (user) {
-          return res.status(400).send(req.body.username + ' already exists');
+          return res.status(400).send(req.body.username + " already exists");
         } else {
           Users.create({
             username: req.body.username,
@@ -37,21 +40,21 @@ router.post(
             })
             .catch((error) => {
               console.error(error);
-              res.status(500).send('Error: ' + error);
+              res.status(500).send("Error: " + error);
             });
         }
       })
       .catch((error) => {
         console.error(error);
-        res.status(500).send('Error: ' + error);
+        res.status(500).send("Error: " + error);
       });
   }
 );
 
 // Get all users
 router.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
+  "/",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.find()
       .then((users) => {
@@ -59,15 +62,15 @@ router.get(
       })
       .catch((err) => {
         console.error(err);
-        res.status(500).send('Error: ' + err);
+        res.status(500).send("Error: " + err);
       });
   }
 );
 
 // Get a single user by username
 router.get(
-  '/:username',
-  passport.authenticate('jwt', { session: false }),
+  "/:username",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.findOne({ username: req.params.username })
       .then((user) => {
@@ -75,7 +78,22 @@ router.get(
       })
       .catch((err) => {
         console.error(err);
-        res.status(500).send('Error: ' + err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndDelete({ _id: req.params.id })
+      .then((user) => {
+        console.log("user successfully deleted");
+        res.json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
       });
   }
 );

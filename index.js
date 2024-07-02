@@ -38,9 +38,9 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected to', mongoose.connection.db.databaseName);
-});
+// mongoose.connection.on('connected', () => {
+//   console.log('Mongoose connected to', mongoose.connection.db.databaseName);
+// });
 app.post(
   "/users",
   [

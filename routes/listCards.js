@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { List, Card } = require("../model");
+const { List, Card } = require("../models/model");
 
 router.post(
   "/:listId/card",

@@ -15,7 +15,7 @@ const uuid = require("uuid");
 // app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const auth = require("./auth")(app);
+const auth = require("./middlewares/auth")(app);
 require("./passport");
 
 app.use(morgan("common"));

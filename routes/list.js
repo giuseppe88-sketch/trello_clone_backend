@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { List } = require("../model");
+const { List } = require("../models/model");
 
 // Get all lists
 router.get(
@@ -57,7 +57,6 @@ router.post(
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: req.user._id, // Ensure the list is associated with the authenticated user
-
       });
       newList
         .save()
@@ -76,8 +75,8 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     List.findByIdAndUpdate(
-        { _id: req.params.ID, userId: req.user._id },
-        {
+      { _id: req.params.ID, userId: req.user._id },
+      {
         title: req.body.title,
         updatedAt: new Date(),
       },

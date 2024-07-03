@@ -20,7 +20,11 @@ require("./middlewares/passport");
 
 app.use(morgan("common"));
 
-let allowedOrigins = ["http://localhost:8080", "http://testsite.com"];
+let allowedOrigins = [
+  "http://localhost:8080",
+  "http://testsite.com",
+  "http://localhost:5173",
+];
 
 app.use(
   cors({

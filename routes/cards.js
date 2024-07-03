@@ -7,7 +7,7 @@ router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.find({ userId: req.user._id })
+    Card.find({ userId: req.user._id })
       .then((card) => {
         res.status(200).json(card);
       })
@@ -22,7 +22,7 @@ router.get(
   "/card/:ID",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findOne({ _id: req.params.ID, userId: req.user._id })
+    Card.findOne({ _id: req.params.ID, userId: req.user._id })
       .then((CardId) => {
         res.status(200).json(CardId);
       })

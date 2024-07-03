@@ -39,6 +39,44 @@ router.post(
   }
 );
 
+router.put(
+  "/:listId/card/:cardId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    List.findOne({ _id: req.params.listId, userId: req.user._id })
+      .then((list) => {
+        if (!list) {
+          return res.status(404).send("List not found");
+        } else {
+          Card.findByIdAndUpdate(
+            { _id: req.params.cardId },
+            {
+              title: req.body.title,
+              description: req.body.description,
+              position: req.body.position,
+              updatedAt: new Date(),
+            },
+            { new: true }
+          )
+            .then((updatedCard) => {
+              if (!updatedCard) {
+                return res.status(404).send("Card not found");
+              }
+              res.status(200).json({ message: "Card updated", updatedCard });
+            })
+            .catch((err) => {
+              console.error(err);
+              res.status(500).send("Error: " + err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
+
 router.delete(
   "/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),

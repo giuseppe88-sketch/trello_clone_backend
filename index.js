@@ -5,7 +5,6 @@ const morgan = require("morgan");
 
 const cors = require("cors");
 const mongoose = require("mongoose");
-const { Users, List, Card } = require("./model");
 const usersRouter = require("./routes/users"); // Import the users routes
 const listsRouter = require("./routes/list"); // Import the lists routes
 const listsCardsRouter = require("./routes/listCards"); // Import the lists routes
@@ -45,7 +44,6 @@ app.use("/api/cards", cardsRouter);
 app.use("/api/listsCards", listsCardsRouter);
 
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
-// mongoose.connect('mongodb+srv://giuseppeadamo908:6Wcf8B3ifec2nxGc@trelloclone.6nnmqkb.mongodb.net/?retryWrites=true&w=majority&appName=trelloclone', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

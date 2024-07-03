@@ -11,8 +11,11 @@ const listSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     cards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Card" }],
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true } // Add userId to associate list with a user
-
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    }, // Add userId to associate list with a user
   },
   { timestamps: true }
 );
@@ -31,7 +34,11 @@ const cardSchema = mongoose.Schema(
     },
     title: { type: String, required: true },
     description: { type: String },
-    status: { type: String, enum: ["todo", "doing", "done"], default: "todo" },
+    status: {
+      type: String,
+      enum: ["todo", "doing", "done", "inProgress", "inTesting", "closed"],
+      default: "todo",
+    },
     position: { type: Number, required: true },
   },
   { timestamps: true }
@@ -41,7 +48,7 @@ userSchema.statics.hashPassword = (password) => {
   return bcrypt.hashSync(password, 10);
 };
 
-userSchema.methods.validatePassword = function(password) {
+userSchema.methods.validatePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 

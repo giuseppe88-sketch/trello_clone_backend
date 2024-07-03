@@ -8,7 +8,7 @@ router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.find()
+    List.find({ userId: req.user._id })
       .then((lists) => res.status(200).json(lists))
       .catch((err) => {
         console.error(err);
@@ -22,7 +22,7 @@ router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findById(req.params.id)
+    List.findOne({ _id: req.params.id, userId: req.user._id })
       .then((list) => {
         if (!list) {
           return res.status(404).json({ message: "List not found" });
@@ -42,7 +42,7 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.find().then((list) => {
+    List.find({ userId: req.user._id }).then((list) => {
       const request = req.body.title;
       const existingList = list.find((item) => item.title === request);
 
@@ -74,8 +74,8 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     List.findByIdAndUpdate(
-      req.params.ID,
-      {
+        { _id: req.params.ID, userId: req.user._id },
+        {
         title: req.body.title,
         updatedAt: new Date(),
       },
@@ -99,7 +99,7 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findByIdAndDelete(req.params.id)
+    List.findOneAndDelete({ _id: req.params.id, userId: req.user._id })
       .then((deletedList) => {
         if (!deletedList) {
           return res.status(404).send("List not found");

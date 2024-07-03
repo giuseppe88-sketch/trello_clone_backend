@@ -11,6 +11,8 @@ const listSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     cards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Card" }],
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true } // Add userId to associate list with a user
+
   },
   { timestamps: true }
 );
@@ -20,6 +22,11 @@ const cardSchema = mongoose.Schema(
     listId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "List",
+      required: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     title: { type: String, required: true },

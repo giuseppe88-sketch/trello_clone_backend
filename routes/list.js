@@ -56,6 +56,8 @@ router.post(
         cards: [],
         createdAt: new Date(),
         updatedAt: new Date(),
+        userId: req.user._id, // Ensure the list is associated with the authenticated user
+
       });
       newList
         .save()

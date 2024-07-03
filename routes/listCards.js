@@ -9,6 +9,7 @@ router.post(
   (req, res) => {
     const newCard = new Card({
       listId: req.params.listId,
+      userId: req.user._id,
       title: req.body.title,
       description: req.body.description,
       position: req.body.position,

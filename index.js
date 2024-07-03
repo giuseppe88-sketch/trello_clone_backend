@@ -41,6 +41,12 @@ let allowedOrigins = [
 //     },
 //   })
 // );
+app.use(cors({
+  origin: 'http://localhost:5173', // Your frontend's URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Allow cookies to be sent with requests
+}));
+
 
 app.use("/api/users", usersRouter);
 app.use("/api/lists", listsRouter);

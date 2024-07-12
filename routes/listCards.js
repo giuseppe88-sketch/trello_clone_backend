@@ -92,7 +92,7 @@ router.delete(
         if (result.nModified === 0) {
           return res.status(404).send("List not found or card not found in the list");
         }
-        res.status(200).json({ message: "Card deleted successfully" });
+        res.status(200).json({ message: "Card deleted successfully" ,result});
       })
       .catch((err) => {
         console.error(err);

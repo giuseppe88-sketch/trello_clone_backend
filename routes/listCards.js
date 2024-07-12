@@ -76,47 +76,28 @@ router.put(
       });
   }
 );
+
 router.delete(
   "/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      // Find the list that matches the listId and belongs to the authenticated user
-      const list = await List.findOne({ _id: req.params.listId, userId: req.user._id });
-      
-      // Check if the list exists
-      if (!list) {
-        console.log('List not found');
-        return res.status(404).send("List not found");
-      }
+  (req, res) => {
+    const { listId, cardId } = req.params;
+    const userId = req.user._id;
 
-      // Log the cards before deletion
-      console.log('Cards before deletion:', list.cards);
-
-      // Filter out the card to be deleted from the list's cards array
-      list.cards = list.cards.filter(
-        (card) => card.toString() !== req.params.cardId
-      );
-
-      // Log the cards after deletion
-      console.log('Cards after deletion:', list.cards);
-
-      // Save the updated list back to the database
-      const updatedList = await list.save();
-
-      // Check if the list was updated
-      if (!updatedList) {
-        console.log('Failed to save updated list');
-        return res.status(500).send("Failed to save updated list");
-      }
-
-      // Respond with a success message and the updated list
-      console.log('Card deleted successfully');
-      return res.status(200).json({ message: "Card deleted successfully", updatedList });
-    } catch (err) {
-      console.error('Error:', err);
-      return res.status(500).send("Error: " + err);
-    }
+    List.updateOne(
+      { _id: listId, userId },
+      { $pull: { cards: cardId } }
+    )
+      .then((result) => {
+        if (result.nModified === 0) {
+          return res.status(404).send("List not found or card not found in the list");
+        }
+        res.status(200).json({ message: "Card deleted successfully" });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
   }
 );
 

@@ -84,15 +84,18 @@ router.delete(
     const { listId, cardId } = req.params;
     const userId = req.user._id;
 
-    List.updateOne(
+    List.findOneAndUpdate(
       { _id: listId, userId },
-      { $pull: { cards: cardId } }
+      { $pull: { cards: cardId } },
+      { new: true }
     )
       .then((result) => {
         if (result.nModified === 0) {
-          return res.status(404).send("List not found or card not found in the list");
+          return res
+            .status(404)
+            .send("List not found or card not found in the list");
         }
-        res.status(200).json({ message: "Card deleted successfully" ,result});
+        res.status(200).json({ message: "Card deleted successfully", result });
       })
       .catch((err) => {
         console.error(err);

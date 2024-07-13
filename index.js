@@ -75,11 +75,11 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Connected to MongoDB Atlas");
-});
+// const db = mongoose.connection;
+// db.on("error", console.error.bind(console, "connection error:"));
+// db.once("open", () => {
+//   console.log("Connected to MongoDB Atlas");
+// });
 
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {

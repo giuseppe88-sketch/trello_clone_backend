@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const { List, Card } = require("../models/model");
+const { validationResult } = require("express-validator");
 
 router.post(
   "/:listId/card",
@@ -94,14 +95,10 @@ router.delete(
             .status(404)
             .send("List not found or card not found in the list");
         }
-        res
-          .status(200)
-          .json({
-            message: "Card deleted successfully",
-            result,
-            cardId,
-            listId,
-          });
+        res.status(200).json({
+          message: "Card deleted successfully",
+          result,
+        });
       })
       .catch((err) => {
         console.error(err);

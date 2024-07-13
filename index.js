@@ -1,9 +1,18 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Your frontend's URL
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // Allow cookies to be sent with requests
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
-const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRouter = require("./routes/users"); // Import the users routes
 const listsRouter = require("./routes/list"); // Import the lists routes
@@ -12,14 +21,7 @@ const cardsRouter = require("./routes/cards"); // Import the lists routes
 
 const uuid = require("uuid");
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend's URL
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies to be sent with requests
-  allowedHeaders: ['Content-Type', 'Authorization']
-
-}));
-
+app.options('*', cors(corsOptions));
 // app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,7 +51,7 @@ let allowedOrigins = [
 //     },
 //   })
 // );
-t
+t;
 app.use("/api/users", usersRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/cards", cardsRouter);

@@ -78,16 +78,14 @@ router.put(
   }
 );
 
-app.delete(
+router.delete(
   "/api/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { listId, cardId } = req.params;
     const userId = req.user._id;
 
-    console.log(
-      `Received delete request: listId=${listId}, cardId=${cardId}, userId=${userId}`
-    );
+    console.log(`Received delete request: listId=${listId}, cardId=${cardId}, userId=${userId}`);
 
     List.findOneAndUpdate(
       { _id: listId, userId },
@@ -96,12 +94,8 @@ app.delete(
     )
       .then((result) => {
         if (!result) {
-          console.log(
-            `List not found or card not found in the list: listId=${listId}, cardId=${cardId}`
-          );
-          return res
-            .status(404)
-            .send("List not found or card not found in the list");
+          console.log(`List not found or card not found in the list: listId=${listId}, cardId=${cardId}`);
+          return res.status(404).send("List not found or card not found in the list");
         }
         console.log(`Card deleted successfully: ${JSON.stringify(result)}`);
         res.status(200).json({ message: "Card deleted successfully", result });

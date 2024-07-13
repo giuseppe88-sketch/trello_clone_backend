@@ -1,1 +1,51 @@
-node_modules
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+*.log
+
+# Environment Variables
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# Editor directories and files
+.vscode/
+.idea/
+.DS_Store
+
+# Mac system files
+*.DS_Store
+
+# Build directories
+dist/
+build/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional cache directory for C8
+.c8rc
+
+# Misc
+*.swp

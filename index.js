@@ -3,14 +3,14 @@ const app = express();
 const cors = require("cors");
 
 
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Your frontend's URL
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true, // Allow cookies to be sent with requests
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173", // Your frontend's URL
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     credentials: true, // Allow cookies to be sent with requests
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
@@ -22,16 +22,16 @@ const cardsRouter = require("./routes/cards"); // Import the lists routes
 
 const uuid = require("uuid");
 
-app.options(
-  "*",
-  cors({
-    origin: "http://localhost:5173", // Your frontend's URL
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true, // Allow cookies to be sent with requests
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-// app.use(cors());
+// app.options(
+//   "*",
+//   cors({
+//     origin: "http://localhost:5173", // Your frontend's URL
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     credentials: true, // Allow cookies to be sent with requests
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const auth = require("./middlewares/auth")(app);
@@ -40,7 +40,6 @@ require("./middlewares/passport");
 app.use(morgan("common"));
 
 let allowedOrigins = [
-  "http://localhost:8080",
   "http://testsite.com",
   "http://localhost:5173",
 ];

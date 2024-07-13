@@ -94,7 +94,14 @@ router.delete(
             .status(404)
             .send("List not found or card not found in the list");
         }
-        res.status(200).json({ message: "Card deleted successfully", result });
+        res
+          .status(200)
+          .json({
+            message: "Card deleted successfully",
+            result,
+            cardId,
+            listId,
+          });
       })
       .catch((err) => {
         console.error(err);

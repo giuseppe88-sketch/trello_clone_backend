@@ -84,7 +84,7 @@ router.delete(
     const { listId, cardId } = req.params;
     const userId = req.user._id;
 
-    List.updateOne(
+    List.findByIdAndUpdate(
       { _id: listId, userId },
       { $pull: { cards: cardId } }
     )

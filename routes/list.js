@@ -22,7 +22,7 @@ router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findOne({ _id: req.params.id, userId: req.user._id })
+    Lists.findOne({ _id: req.params.id, userId: req.user._id })
       .then((list) => {
         if (!list) {
           return res.status(404).json({ message: "List not found" });

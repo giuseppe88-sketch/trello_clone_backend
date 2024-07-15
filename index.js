@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-require('dotenv').config();
-
+require("dotenv").config();
 
 // app.use(
 //   cors({
@@ -21,21 +20,12 @@ const listsRouter = require("./routes/list"); // Import the lists routes
 const listsCardsRouter = require("./routes/listCards"); // Import the lists routes
 const cardsRouter = require("./routes/cards"); // Import the lists routes
 
-const uuid = require("uuid");
+require("uuid");
 
-// app.options(
-//   "*",
-//   cors({
-//     origin: "http://localhost:5173", // Your frontend's URL
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     credentials: true, // Allow cookies to be sent with requests
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//   })
-// );
 // app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const auth = require("./middlewares/auth")(app);
+require("./middlewares/auth")(app);
 require("./middlewares/passport");
 
 app.use(morgan("common"));
@@ -61,6 +51,8 @@ app.use(
     },
   })
 );
+
+
 app.use("/api/users", usersRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/cards", cardsRouter);
@@ -76,11 +68,11 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error:"));
-// db.once("open", () => {
-//   console.log("Connected to MongoDB Atlas");
-// });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Connected to MongoDB Atlas");
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {

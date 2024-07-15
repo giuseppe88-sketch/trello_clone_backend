@@ -108,12 +108,12 @@ router.delete(
         console.log(`Card deleted successfully: ${JSON.stringify(result)}`);
         res
           .status(200).send(result)
-          .json({
-            message: "Card deleted successfully",
-            listId: listId,
-            cardId: cardId,
-            result,
-          });
+          // .json({
+          //   message: "Card deleted successfully",
+          //   listId: listId,
+          //   cardId: cardId,
+          //   result,
+          // });
       })
       .catch((err) => {
         console.error(`Error deleting card: ${err}`);

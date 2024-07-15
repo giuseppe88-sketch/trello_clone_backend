@@ -78,6 +78,47 @@ router.put(
   }
 );
 
+// router.delete(
+//   "/:listId/card/:cardId",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     const { listId, cardId } = req.params;
+//     const userId = req.user._id;
+
+//     console.log(
+//       `Received delete request: listId=${listId}, cardId=${cardId}, userId=${userId}`
+//     );
+
+//     Lists.findOneAndUpdate(
+//       { _id: listId, userId },
+//       { $pull: { cards: cardId } },
+//       { new: true}
+//     )
+//       .then((result) => {
+//         if (!result) {
+//           console.log(
+//             `List not found or card not found in the list: listId=${listId}, cardId=${cardId}`
+//           );
+//           return res
+//             .status(404)
+//             .send("List not found or card not found in the list");
+//         }
+//         console.log(`Card deleted successfully: ${JSON.stringify(result)}`);
+//         res
+//           .status(200)
+//           .json({
+//             message: "Card deleted successfully",
+//             listId: listId,
+//             cardId: cardId,
+//             result,
+//           });
+//       })
+//       .catch((err) => {
+//         console.error(`Error deleting card: ${err}`);
+//         res.status(500).send("Error: " + err);
+//       });
+//   }
+// );
 router.delete(
   "/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),
@@ -92,7 +133,7 @@ router.delete(
     Lists.findOneAndUpdate(
       { _id: listId, userId },
       { $pull: { cards: cardId } },
-      { new: true}
+      { new: true }
     )
       .then((result) => {
         if (!result) {
@@ -103,15 +144,23 @@ router.delete(
             .status(404)
             .send("List not found or card not found in the list");
         }
-        console.log(`Card deleted successfully: ${JSON.stringify(result)}`);
-        res
-          .status(200)
-          .json({
-            message: "Card deleted successfully",
-            listId: listId,
-            cardId: cardId,
-            result,
-          });
+
+        // Remove the card itself
+        return Cards.findOneAndRemove({ _id: cardId, userId });
+      })
+      .then((removedCard) => {
+        if (!removedCard) {
+          console.log(`Card not found: cardId=${cardId}`);
+          return res.status(404).send("Card not found");
+        }
+
+        console.log(`Card deleted successfully: ${JSON.stringify(removedCard)}`);
+        res.status(200).json({
+          message: "Card deleted successfully",
+          listId: listId,
+          cardId: cardId,
+          removedCard,
+        });
       })
       .catch((err) => {
         console.error(`Error deleting card: ${err}`);
@@ -119,7 +168,6 @@ router.delete(
       });
   }
 );
-
 // router.delete(
 //   "/:listId/card/:cardId",
 //   passport.authenticate("jwt", { session: false }),

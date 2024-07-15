@@ -79,7 +79,7 @@ router.put(
 );
 
 router.delete(
-  "/api/:listId/card/:cardId",
+  "/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { listId, cardId } = req.params;

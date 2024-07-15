@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { List, Card } = require("../models/model");
+const { Lists, Cards } = require("../models/model");
 const { validationResult } = require("express-validator");
 
 router.post(
   "/:listId/card",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const newCard = new Card({
+    const newCard = new Cards({
       listId: req.params.listId,
       userId: req.user._id,
       title: req.body.title,
@@ -22,7 +22,7 @@ router.post(
       .save()
       .then((card) => {
         // Add the new card's ID to the list's cards array
-        return List.findByIdAndUpdate(
+        return Lists.findByIdAndUpdate(
           { _id: req.params.listId, userId: req.user._id },
           { $push: { cards: card._id } },
           { new: true }
@@ -44,7 +44,7 @@ router.put(
   "/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findOne({ _id: req.params.listId, userId: req.user._id })
+    Lists.findOne({ _id: req.params.listId, userId: req.user._id })
       .then((list) => {
         if (!list) {
           return res.status(404).send("List not found");
@@ -89,7 +89,7 @@ router.delete(
       `Received delete request: listId=${listId}, cardId=${cardId}, userId=${userId}`
     );
 
-    List.findOneAndUpdate(
+    Lists.findOneAndUpdate(
       { _id: listId, userId },
       { $pull: { cards: cardId } },
       { new: true}

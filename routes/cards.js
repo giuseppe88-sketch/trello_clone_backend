@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { Card } = require("../models/model");
+const { Cards } = require("../models/model");
 
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Card.find({ userId: req.user._id })
+    Cards.find({ userId: req.user._id })
       .then((card) => {
         res.status(200).json(card);
       })
@@ -22,7 +22,7 @@ router.get(
   "/card/:ID",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Card.findOne({ _id: req.params.ID, userId: req.user._id })
+    Cards.findOne({ _id: req.params.ID, userId: req.user._id })
       .then((CardId) => {
         res.status(200).json(CardId);
       })
@@ -37,7 +37,7 @@ router.put(
   "/:ID",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Card.findByIdAndUpdate(
+    Cards.findByIdAndUpdate(
       { _id: req.params.ID, userId: req.user._id },
       {
         title: req.body.title,

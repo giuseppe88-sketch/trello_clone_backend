@@ -10,10 +10,10 @@ const userSchema = mongoose.Schema({
 const listSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
-    cards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Card" }],
+    cards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Cards" }],
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
       required: true,
     }, // Add userId to associate list with a user
   },
@@ -24,12 +24,12 @@ const cardSchema = mongoose.Schema(
   {
     listId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "List",
+      ref: "Lists",
       required: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
       required: true,
     },
     title: { type: String, required: true },
@@ -53,9 +53,9 @@ userSchema.methods.validatePassword = function (password) {
 };
 
 let Users = mongoose.model("Users", userSchema);
-let List = mongoose.model("List", listSchema);
-let Card = mongoose.model("Card", cardSchema);
+let Lists = mongoose.model("Lists", listSchema);
+let Cards = mongoose.model("Cards", cardSchema);
 
 module.exports.Users = Users;
-module.exports.List = List;
-module.exports.Card = Card;
+module.exports.Lists = Lists;
+module.exports.Cards = Cards;

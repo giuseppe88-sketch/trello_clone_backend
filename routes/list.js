@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { List } = require("../models/model");
+const { Lists } = require("../models/model");
 
 // Get all lists
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.find({ userId: req.user._id })
+    Lists.find({ userId: req.user._id })
       .then((lists) => res.status(200).json(lists))
       .catch((err) => {
         console.error(err);
@@ -17,7 +17,7 @@ router.get(
   }
 );
 
-// Get a list by ID
+// Get a list by IDs
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -42,7 +42,7 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.find({ userId: req.user._id }).then((list) => {
+    Lists.find({ userId: req.user._id }).then((list) => {
       const request = req.body.title;
       const existingList = list.find((item) => item.title === request);
 
@@ -51,7 +51,7 @@ router.post(
           message: "There is already a list created with the title " + request,
         });
       }
-      const newList = new List({
+      const newList = new Lists({
         title: req.body.title,
         cards: [],
         createdAt: new Date(),
@@ -74,7 +74,7 @@ router.put(
   "/:ID",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findByIdAndUpdate(
+    Lists.findByIdAndUpdate(
       { _id: req.params.ID, userId: req.user._id },
       {
         title: req.body.title,
@@ -100,7 +100,7 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    List.findOneAndDelete({ _id: req.params.id, userId: req.user._id })
+    Lists.findOneAndDelete({ _id: req.params.id, userId: req.user._id })
       .then((deletedList) => {
         if (!deletedList) {
           return res.status(404).send("List not found");

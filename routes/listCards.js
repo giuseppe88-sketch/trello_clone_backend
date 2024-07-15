@@ -92,7 +92,9 @@ router.delete(
     List.findOneAndUpdate(
       { _id: listId, userId },
       { $pull: { cards: cardId } },
-      { new: true, useFindAndModify: false }
+      { new: true, useFindAndModify: false },
+      {children: children }, 
+      {new: true}, 
     )
       .then((result) => {
         if (!result) {
@@ -105,7 +107,7 @@ router.delete(
         }
         console.log(`Card deleted successfully: ${JSON.stringify(result)}`);
         res
-          .status(200)
+          .status(200).send(result)
           .json({
             message: "Card deleted successfully",
             listId: listId,

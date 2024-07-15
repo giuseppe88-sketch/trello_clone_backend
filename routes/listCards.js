@@ -146,7 +146,7 @@ router.delete(
         }
 
         // Remove the card itself
-        return Cards.findOneAndRemove({ _id: cardId, userId });
+        return Cards.findOneAndDelete({ _id: cardId, userId });
       })
       .then((removedCard) => {
         if (!removedCard) {

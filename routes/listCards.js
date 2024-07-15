@@ -92,7 +92,7 @@ router.delete(
     List.findOneAndUpdate(
       { _id: listId, userId },
       { $pull: { cards: cardId } },
-      { new: true, useFindAndModify: false }
+      { new: true}
     )
       .then((result) => {
         if (!result) {

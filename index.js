@@ -58,6 +58,7 @@ app.use("/api/lists", listsRouter);
 app.use("/api/cards", cardsRouter);
 app.use("/api/listsCards", listsCardsRouter);
 
+mongoose.set('debug', true)
 // mongoose.connect('mongodb://localhost:27017/trelloDB', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,

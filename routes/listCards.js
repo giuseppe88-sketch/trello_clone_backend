@@ -49,7 +49,7 @@ router.put(
         if (!list) {
           return res.status(404).send("List not found");
         } else {
-          Card.findByIdAndUpdate(
+          Cards.findByIdAndUpdate(
             { _id: req.params.cardId },
             {
               title: req.body.title,
@@ -78,47 +78,6 @@ router.put(
   }
 );
 
-// router.delete(
-//   "/:listId/card/:cardId",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     const { listId, cardId } = req.params;
-//     const userId = req.user._id;
-
-//     console.log(
-//       `Received delete request: listId=${listId}, cardId=${cardId}, userId=${userId}`
-//     );
-
-//     Lists.findOneAndUpdate(
-//       { _id: listId, userId },
-//       { $pull: { cards: cardId } },
-//       { new: true}
-//     )
-//       .then((result) => {
-//         if (!result) {
-//           console.log(
-//             `List not found or card not found in the list: listId=${listId}, cardId=${cardId}`
-//           );
-//           return res
-//             .status(404)
-//             .send("List not found or card not found in the list");
-//         }
-//         console.log(`Card deleted successfully: ${JSON.stringify(result)}`);
-//         res
-//           .status(200)
-//           .json({
-//             message: "Card deleted successfully",
-//             listId: listId,
-//             cardId: cardId,
-//             result,
-//           });
-//       })
-//       .catch((err) => {
-//         console.error(`Error deleting card: ${err}`);
-//         res.status(500).send("Error: " + err);
-//       });
-//   }
-// );
 router.delete(
   "/:listId/card/:cardId",
   passport.authenticate("jwt", { session: false }),
@@ -168,33 +127,6 @@ router.delete(
       });
   }
 );
-// router.delete(
-//   "/:listId/card/:cardId",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     List.findOne({ _id: req.params.listId, userId: req.user._id })
-//       .then((list) => {
-//         if (!list) {
-//           return res.status(404).send("List not found");
-//         }
 
-//         // Remove the card from the list
-//         list.cards = list.cards.filter(
-//           (card) => card.toString() !== req.params.cardId
-//         );
-
-//         return list.save();
-//       })
-//       .then((updatedList) => {
-//         res
-//           .status(200)
-//           .json({ message: "Card deleted successfully", updatedList });
-//       })
-//       .catch((err) => {
-//         console.error(err);
-//         res.status(500).send("Error: " + err);
-//       });
-//   }
-// );
 
 module.exports = router;

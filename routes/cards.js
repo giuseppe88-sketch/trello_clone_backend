@@ -61,44 +61,29 @@ router.put(
   }
 );
 
-// router.put(
-//   "/:cardId/list",
-//   passport.authenticate("jwt", { session: false }),
-//   async (req, res) => {
-//     const { cardId } = req.params;
-//     const { newListId } = req.body;
-
-//     if (
-//       !mongoose.Types.ObjectId.isValid(cardId) ||
-//       !mongoose.Types.ObjectId.isValid(newListId)
-//     ) {
-//       return res.status(400).json({ message: "Invalid cardId or newListId" });
-//     }
-
-//     try {
-//       const card = await Cards.findById(cardId);
-
-//       if (!card) {
-//         return res.status(404).json({ message: "Card not found" });
-//       }
-
-//       card.listId = newListId;
-//       await card.save();
-
-//       res
-//         .status(200)
-//         .json({ message: "Card listId updated successfully", card });
-//     } catch (error) {
-//       res.status(500).json({ message: "Internal server error", error });
-//     }
-//   }
-
-// );
-
-router.get("/:cardId/list", (req, res) => {
-  res.send("debug");
-})
-
-
+router.put(
+  "/:cardId/list",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Cards.findByIdAndUpdate(
+      { _id: req.params.cardId, userId: req.user._id },
+      {
+        listId: req.body.listId,
+        updatedAt: new Date(),
+      },
+      { new: true }
+    )
+      .then((card) => {
+        if (!card) {
+          return res.status(404).send("Card not found");
+        }
+        res.status(200).json(card);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
 
 module.exports = router;

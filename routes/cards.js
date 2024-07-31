@@ -44,6 +44,8 @@ router.put(
         description: req.body.description,
         position: req.body.position,
         updatedAt: new Date(),
+        position: req.body.position,
+        listId: req.body.listId,
       },
       { new: true }
     )

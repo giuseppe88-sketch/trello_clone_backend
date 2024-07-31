@@ -64,34 +64,36 @@ router.put(
 router.put(
   "/:cardId/list",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    const { cardId } = req.params;
-    const { newListId } = req.body;
+  // async (req, res) => {
+  //   const { cardId } = req.params;
+  //   const { newListId } = req.body;
 
-    if (
-      !mongoose.Types.ObjectId.isValid(cardId) ||
-      !mongoose.Types.ObjectId.isValid(newListId)
-    ) {
-      return res.status(400).json({ message: "Invalid cardId or newListId" });
-    }
+  //   if (
+  //     !mongoose.Types.ObjectId.isValid(cardId) ||
+  //     !mongoose.Types.ObjectId.isValid(newListId)
+  //   ) {
+  //     return res.status(400).json({ message: "Invalid cardId or newListId" });
+  //   }
 
-    try {
-      const card = await Cards.findById(cardId);
+  //   try {
+  //     const card = await Cards.findById(cardId);
 
-      if (!card) {
-        return res.status(404).json({ message: "Card not found" });
-      }
+  //     if (!card) {
+  //       return res.status(404).json({ message: "Card not found" });
+  //     }
 
-      card.listId = newListId;
-      await card.save();
+  //     card.listId = newListId;
+  //     await card.save();
 
-      res
-        .status(200)
-        .json({ message: "Card listId updated successfully", card });
-    } catch (error) {
-      res.status(500).json({ message: "Internal server error", error });
-    }
-  }
+  //     res
+  //       .status(200)
+  //       .json({ message: "Card listId updated successfully", card });
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Internal server error", error });
+  //   }
+  // }
+  res.send("hello world")
+
 );
 
 module.exports = router;

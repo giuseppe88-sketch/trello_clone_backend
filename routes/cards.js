@@ -45,7 +45,6 @@ router.put(
         position: req.body.position,
         updatedAt: new Date(),
         position: req.body.position,
-        listId: req.body.listId,
       },
       { new: true }
     )
@@ -61,5 +60,29 @@ router.put(
       });
   }
 );
+
+router.put("/:cardId", async (req, res) => {
+  const { cardId } = req.params;
+  const { newListId } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(cardId) || !mongoose.Types.ObjectId.isValid(newListId)) {
+    return res.status(400).json({ message: "Invalid cardId or newListId" });
+  }
+
+  try {
+    const card = await Cards.findById(cardId);
+
+    if (!card) {
+      return res.status(404).json({ message: "Card not found" });
+    }
+
+    card.listId = newListId;
+    await card.save();
+
+    res.status(200).json({ message: "Card listId updated successfully", card });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error });
+  }
+});
 
 module.exports = router;

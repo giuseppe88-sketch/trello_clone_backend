@@ -61,7 +61,7 @@ router.put(
   }
 );
 
-router.put("/:cardId", async (req, res) => {
+router.put("/:cardId/list", async (req, res) => {
   const { cardId } = req.params;
   const { newListId } = req.body;
 

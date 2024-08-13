@@ -44,6 +44,7 @@ router.post(
   (req, res) => {
     Lists.find({ userId: req.user._id }).then((list) => {
       const request = req.body.title;
+      const requestId = request.user.id;
       const existingList = list.find((item) => item.title === request);
 
       if (existingList) {
@@ -51,12 +52,15 @@ router.post(
           message: "There is already a list created with the title " + request,
         });
       }
+      const taskCount = Lists.countDocuments({ requestId });
+
       const newList = new Lists({
         title: req.body.title,
         cards: [],
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: req.user._id, // Ensure the list is associated with the authenticated user
+        order: taskCount, // Ensure the list has the correct order number
       });
       newList
         .save()

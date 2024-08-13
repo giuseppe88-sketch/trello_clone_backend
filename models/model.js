@@ -16,8 +16,10 @@ const listSchema = mongoose.Schema(
       ref: "Users",
       required: true,
     }, // Add userId to associate list with a user
+    order: { type: Number, required: true }
   },
-  { timestamps: true }
+  { timestamps: true },
+
 );
 
 const cardSchema = mongoose.Schema(
@@ -40,6 +42,8 @@ const cardSchema = mongoose.Schema(
       default: "todo",
     },
     position: { type: Number, required: true },
+    order: { type: Number, required: true }
+
   },
   { timestamps: true }
 );

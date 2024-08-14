@@ -52,7 +52,7 @@ router.post(
         });
       }
       
-      const listCount = Lists.countDocuments({ userId: req.user._id });
+      const listCount = list.length;
       
       const newList = new Lists({
         title: req.body.title,

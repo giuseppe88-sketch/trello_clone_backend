@@ -99,6 +99,58 @@ router.put(
   }
 );
 
+
+router.put(
+  "/reorder/:id",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const listId = req.params.id;
+      const newOrder = req.body.order; // The new desired order for this list
+
+      // Fetch the list to be reordered
+      const listToUpdate = await Lists.findOne({ _id: listId, userId: req.user._id });
+
+      if (!listToUpdate) {
+        return res.status(404).send("List not found");
+      }
+
+      // Fetch all lists belonging to the user, sorted by order
+      const lists = await Lists.find({ userId: req.user._id }).sort('order');
+
+      // Determine the current position of the list
+      const currentOrder = listToUpdate.order;
+
+      if (newOrder === currentOrder) {
+        // If the new order is the same as the current one, there's nothing to change
+        return res.status(200).json(listToUpdate);
+      }
+
+      // Remove the list from its current position
+      const remainingLists = lists.filter(list => list._id.toString() !== listId);
+
+      // Insert the list at the new position
+      remainingLists.splice(newOrder, 0, listToUpdate);
+
+      // Update the order of all lists
+      for (let i = 0; i < remainingLists.length; i++) {
+        remainingLists[i].order = i;
+        await remainingLists[i].save();
+      }
+
+      // Update the title and timestamp of the reordered list
+      // listToUpdate.title = req.body.title;
+      // listToUpdate.updatedAt = new Date();
+      await listToUpdate.save();
+
+      res.status(200).json(listToUpdate);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    }
+  }
+);
+
 // DELETE
 router.delete(
   "/:id",

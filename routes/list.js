@@ -52,15 +52,16 @@ router.post(
           message: "There is already a list created with the title " + request,
         });
       }
-      const taskCount = Lists.countDocuments({ requestId });
-
+      
+      const listCount = Lists.countDocuments({ userId: req.user._id });
+      
       const newList = new Lists({
         title: req.body.title,
         cards: [],
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: req.user._id, // Ensure the list is associated with the authenticated user
-        order: taskCount, // Ensure the list has the correct order number
+        order: listCount, // Ensure the list has the correct order number
       });
       newList
         .save()

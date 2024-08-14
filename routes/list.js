@@ -52,7 +52,7 @@ router.post(
         });
       }
       
-      // const listCount = Lists.countDocuments({ userId: req.user._id });
+      const listCount = Lists.countDocuments({ userId: req.user._id });
       
       const newList = new Lists({
         title: req.body.title,
@@ -60,7 +60,7 @@ router.post(
         createdAt: new Date(),
         updatedAt: new Date(),
         userId: req.user._id, // Ensure the list is associated with the authenticated user
-        // order: listCount, // Ensure the list has the correct order number
+        order: listCount, // Ensure the list has the correct order number
       });
       newList
         .save()

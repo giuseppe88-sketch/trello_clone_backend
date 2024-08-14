@@ -44,7 +44,6 @@ router.post(
   (req, res) => {
     Lists.find({ userId: req.user._id }).then((list) => {
       const request = req.body.title;
-      const requestId = request.user.id;
       const existingList = list.find((item) => item.title === request);
 
       if (existingList) {
